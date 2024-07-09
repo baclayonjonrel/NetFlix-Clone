@@ -11,9 +11,9 @@ import AVFoundation
 
 class VideoPlayerViewController {
 
-    static let shared = VideoPlayerViewController() // Singleton instance
+    static let shared = VideoPlayerViewController()
     
-    private init() {} // Private initializer to enforce singleton
+    private init() {}
     
     private var playerController: AVPlayerViewController?
     private var player: AVPlayer?
@@ -28,20 +28,22 @@ class VideoPlayerViewController {
         playerController = AVPlayerViewController()
         playerController?.player = player
         
-        // Set modal presentation style to fullscreen
         playerController?.modalPresentationStyle = .fullScreen
         
-        // Present the player controller
         viewController.present(playerController!, animated: true) {
             self.player?.play()
         }
         
-        // Add observer for player controller dismissal
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem)
     }
     
     @objc private func playerDidFinishPlaying() {
-        // Stop the player when playback finishes
         player?.pause()
+        playerController?.dismiss(animated: true, completion: {
+            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem)
+            
+            self.player = nil
+            self.playerController = nil
+        })
     }
 }

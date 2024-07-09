@@ -386,6 +386,36 @@
             endingLineNumber = "40"
             landmarkName = "fetchDownloadedMovie()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F16F13EE-797F-4BAC-82E5-7078B08E054B - e3905cbff32a3e6e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;NetFlix_Clone.MovieItem&gt;, Swift.Error&gt;) -&gt; () in NetFlix_Clone.DownloadViewController.fetchDownloadedMovie() -&gt; ()"
+                  moduleName = "NetFlix Clone"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonrelbaclayon/Desktop/Github-Desktop/NetFlix%20Clone/NetFlix%20Clone/Controllers/Core/DownloadViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "41"
+                  endingLineNumber = "41">
+               </Location>
+               <Location
+                  uuid = "F16F13EE-797F-4BAC-82E5-7078B08E054B - e3905cbff32a3e6e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;NetFlix_Clone.MovieItem&gt;, Swift.Error&gt;) -&gt; () in NetFlix_Clone.DownloadViewController.fetchDownloadedMovie() -&gt; ()"
+                  moduleName = "NetFlix Clone"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jonrelbaclayon/Desktop/Github-Desktop/NetFlix%20Clone/NetFlix%20Clone/Controllers/Core/DownloadViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "41"
+                  endingLineNumber = "41">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

@@ -9,6 +9,7 @@ Welcome to the Netflix Clone! This app is designed to help you explore and disco
 - Search for specific movies and TV shows.
 - Responsive and user-friendly design.
 - Saving movie list model to coredata
+- playing video using AVPlayer
 
 ## Screenshots
 
@@ -49,6 +50,7 @@ To get started with the Netflix Clone, follow these steps:
 - URLSession for network requests to TMDB API
 - CoreData for local storage
 - SDWebImage for image caching
+- AVPlayer for video playing
 
 ## Contributing
 

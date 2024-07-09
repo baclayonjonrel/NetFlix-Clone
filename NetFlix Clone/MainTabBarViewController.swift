@@ -26,7 +26,7 @@ class MainTabBarViewController: UITabBarController {
         vc1.title = "Home"
         vc2.title = "Coming Soon"
         vc3.title = "Search"
-        vc4.title = "Downloads"
+        vc4.title = "My List"
         
         setViewControllers([vc1, vc2, vc3, vc4], animated: true)
     }

@@ -25,7 +25,7 @@ class DownloadViewController: UIViewController {
         
         view.addSubview(downloadedTable)
         view.backgroundColor = .systemBackground
-        title = "Downloads"
+        title = "My List"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     

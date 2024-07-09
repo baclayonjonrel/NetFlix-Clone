@@ -25,7 +25,7 @@ class HeroHeaderUIView: UIView {
     
     private let downloadButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Download", for: .normal)
+        button.setTitle("Save to List", for: .normal)
         button.layer.borderColor = UIColor.systemBackground.cgColor
         button.layer.borderWidth = 1
         button.backgroundColor = .systemBlue
@@ -57,13 +57,13 @@ class HeroHeaderUIView: UIView {
         print("download button clicked")
         guard let downloadMovie = headerMovie else {return}
         if !DataPersistenceManager.shared.isMovieSaved(id: Int64(headerMovie?.id ?? 0)) {
-            self.downloadButton.setTitle("Downloading...", for: .normal)
+            self.downloadButton.setTitle("Saving...", for: .normal)
             DataPersistenceManager.shared.downloadMovieWith(model: downloadMovie) { results in
                 switch results {
                 case .success(let success):
                     print("saved to downloads")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.downloadButton.setTitle("Downloaded", for: .normal)
+                        self.downloadButton.setTitle("Saved", for: .normal)
                         self.downloadButton.backgroundColor = .lightGray
                         //self.downloadButton.isEnabled = false
                     }
@@ -125,7 +125,7 @@ class HeroHeaderUIView: UIView {
             
             DispatchQueue.main.async {
                 if isSaved {
-                    self.downloadButton.setTitle("Downloaded", for: .normal)
+                    self.downloadButton.setTitle("Saved", for: .normal)
                     self.downloadButton.backgroundColor = .lightGray
                     //self.downloadButton.isEnabled = false
                 }

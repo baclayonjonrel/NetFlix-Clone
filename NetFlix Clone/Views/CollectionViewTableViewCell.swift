@@ -113,7 +113,7 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
         let config = UIContextMenuConfiguration(
             identifier: nil, 
             previewProvider: nil) { _ in
-                let downloadAction = UIAction(title: "Downlaod") { _ in
+                let downloadAction = UIAction(title: "Save to list") { _ in
                     self.downloadTitleAt(indexPath: indexPath)
                 }
                 return UIMenu(title: "", options: .displayInline, children: [downloadAction])

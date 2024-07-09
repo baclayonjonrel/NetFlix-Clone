@@ -95,18 +95,6 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
         }
         
         self.delegate?.CollectionViewTableViewCellDidTapCell(self, viewModel: self.movies[indexPath.row])
-//        APICaller.shared.getMovie(with: titleName + " trailer") { result in
-//            switch result {
-//            case .success(let video):
-//                
-//                let title = self.movies[indexPath.row].original_name ?? self.movies[indexPath.row].original_title ?? self.movies[indexPath.row].name
-//                let viewModel = TitlePreviewViewModel(title:title ?? "", youtubeVideo: video, description: self.movies[indexPath.row].overview ?? "")
-//                
-//                self.delegate?.CollectionViewTableViewCellDidTapCell(self, viewModel: self.movies[indexPath.row])
-//            case .failure(let failure):
-//                print(failure.localizedDescription)
-//            }
-//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

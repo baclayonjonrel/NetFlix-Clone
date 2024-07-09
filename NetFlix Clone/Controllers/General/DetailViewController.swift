@@ -205,7 +205,7 @@ class DetailViewController: UIViewController {
     
     private func activateConstraints() {
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: -20),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -219,9 +219,9 @@ class DetailViewController: UIViewController {
             heroImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             heroImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             heroImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            heroImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.50),
+            heroImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.45),
             
-            titleLbl.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 85),
+            titleLbl.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 105),
             titleLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             

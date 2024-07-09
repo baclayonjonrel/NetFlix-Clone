@@ -10,6 +10,7 @@ import UIKit
 class HeroHeaderUIView: UIView {
     
     private var headerMovie: Media? = nil
+    private var gradientAdded = false
     
     private let playButton: UIButton = {
         let button = UIButton()
@@ -156,6 +157,11 @@ class HeroHeaderUIView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         heroImageView.frame = bounds
+        if !gradientAdded {
+            addGradient()
+            gradientAdded = true
+            setupView()
+        }
     }
     
     required init?(coder: NSCoder) {

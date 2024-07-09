@@ -26,7 +26,7 @@ class DownloadViewController: UIViewController {
         view.addSubview(downloadedTable)
         view.backgroundColor = .systemBackground
         title = "My List"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     override func viewWillAppear(_ animated: Bool) {

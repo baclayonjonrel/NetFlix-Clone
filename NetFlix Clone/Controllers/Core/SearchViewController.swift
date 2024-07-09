@@ -28,7 +28,7 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
 
         title = "Search"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         
         fetchDiscoverMovies()
         

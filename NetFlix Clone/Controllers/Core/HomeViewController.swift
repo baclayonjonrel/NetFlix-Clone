@@ -284,11 +284,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension HomeViewController: CollectionViewTableViewCellDelegate {
     func CollectionViewTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: Media) {
-//        DispatchQueue.main.async {
-//            let vc = PreviewViewController()
-//            vc.configure(with: viewModel)
-//            self.navigationController?.pushViewController(vc, animated: true)
-//        }
         DispatchQueue.main.async {
             let vc = DetailViewController()
             vc.configure(with: viewModel)

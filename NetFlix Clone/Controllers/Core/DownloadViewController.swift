@@ -78,19 +78,13 @@ extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let title = downloadedMovies[indexPath.row].name ?? downloadedMovies[indexPath.row].original_name ?? downloadedMovies[indexPath.row].original_title ?? ""
+        let movieItem = downloadedMovies[indexPath.row]
+        let title = Media(id: Int(movieItem.id), media_type: movieItem.media_type, original_name: movieItem.original_name, original_title: movieItem.original_title, poster_path: movieItem.poster_path, overview: movieItem.overview, vote_count: Int(movieItem.vote_count), release_date: movieItem.release_date, vote_average: movieItem.vote_average, name: movieItem.name)
         
-        APICaller.shared.getMovie(with: title) { [weak self] result in
-            switch result {
-            case .success(let videoElement):
-                DispatchQueue.main.async {
-                    let vc = PreviewViewController()
-                    vc.configure(with: TitlePreviewViewModel(title: title, youtubeVideo: videoElement, description: self?.downloadedMovies[indexPath.row].overview ?? ""))
-                    self?.navigationController?.pushViewController(vc, animated: true)
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+        DispatchQueue.main.async {
+            let vc = DetailViewController()
+            vc.configure(with: title)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     

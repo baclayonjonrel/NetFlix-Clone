@@ -122,27 +122,20 @@ extension SearchViewController: UISearchResultsUpdating {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let title = discoverMovies[indexPath.row].name ?? discoverMovies[indexPath.row].original_name ?? discoverMovies[indexPath.row].original_title ?? ""
+        let title = discoverMovies[indexPath.row]
         
-        APICaller.shared.getMovie(with: title) { [weak self] result in
-            switch result {
-            case .success(let videoElement):
-                DispatchQueue.main.async {
-                    let vc = PreviewViewController()
-                    vc.configure(with: TitlePreviewViewModel(title: title, youtubeVideo: videoElement, description: self?.discoverMovies[indexPath.row].overview ?? ""))
-                    self?.navigationController?.pushViewController(vc, animated: true)
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+        DispatchQueue.main.async {
+            let vc = DetailViewController()
+            vc.configure(with: title)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
 
 extension SearchViewController: SearchResultsViewControllerDelegate {
-    func searchResultsViewControllerDidTapItem(_ viewModel: TitlePreviewViewModel) {
+    func searchResultsViewControllerDidTapItem(_ viewModel: Media) {
         DispatchQueue.main.async {
-            let vc = PreviewViewController()
+            let vc = DetailViewController()
             vc.configure(with: viewModel)
             self.navigationController?.pushViewController(vc, animated: true)
         }

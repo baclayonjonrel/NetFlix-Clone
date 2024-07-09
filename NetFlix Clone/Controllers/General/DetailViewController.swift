@@ -187,11 +187,11 @@ class DetailViewController: UIViewController {
             
             playButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
             playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            playButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -100),
+            playButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -5),
             playButton.heightAnchor.constraint(equalToConstant: 40),
             
             downloadButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
-            downloadButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 100),
+            downloadButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 5),
             downloadButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             downloadButton.heightAnchor.constraint(equalToConstant: 40),
             

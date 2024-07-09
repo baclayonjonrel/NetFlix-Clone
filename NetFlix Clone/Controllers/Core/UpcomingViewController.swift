@@ -73,19 +73,12 @@ extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let title = upcomingMovies[indexPath.row].name ?? upcomingMovies[indexPath.row].original_name ?? upcomingMovies[indexPath.row].original_title ?? ""
+        let title = upcomingMovies[indexPath.row]
         
-        APICaller.shared.getMovie(with: title) { [weak self] result in
-            switch result {
-            case .success(let videoElement):
-                DispatchQueue.main.async {
-                    let vc = PreviewViewController()
-                    vc.configure(with: TitlePreviewViewModel(title: title, youtubeVideo: videoElement, description: self?.upcomingMovies[indexPath.row].overview ?? ""))
-                    self?.navigationController?.pushViewController(vc, animated: true)
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+        DispatchQueue.main.async {
+            let vc = DetailViewController()
+            vc.configure(with: title)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

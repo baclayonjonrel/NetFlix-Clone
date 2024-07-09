@@ -17,7 +17,8 @@ class HeroHeaderUIView: UIView {
         button.layer.borderColor = UIColor.systemBackground.cgColor
         button.layer.borderWidth = 1
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 0
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(playButtonClicked), for: .touchUpInside)
         return button
@@ -29,7 +30,8 @@ class HeroHeaderUIView: UIView {
         button.layer.borderColor = UIColor.systemBackground.cgColor
         button.layer.borderWidth = 1
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 5
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 0
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(downloadButtonClicked), for: .touchUpInside)
         return button
@@ -51,6 +53,10 @@ class HeroHeaderUIView: UIView {
         ]
         gradientLayer.frame = bounds
         layer.addSublayer(gradientLayer)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+      setupView()
     }
     
     @objc func downloadButtonClicked() {
@@ -136,6 +142,10 @@ class HeroHeaderUIView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupView()
+    }
+    
+    private func setupView() {
         addSubview(heroImageView)
         addGradient()
         addSubview(playButton)

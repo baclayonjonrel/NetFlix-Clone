@@ -70,6 +70,7 @@ class DetailViewController: UIViewController {
         button.layer.borderWidth = 1
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 10
+        button.layer.borderWidth = 0
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(playButtonClicked), for: .touchUpInside)
         return button
@@ -82,6 +83,7 @@ class DetailViewController: UIViewController {
         button.layer.borderWidth = 1
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 10
+        button.layer.borderWidth = 0
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(downloadButtonClicked), for: .touchUpInside)
         return button
@@ -98,8 +100,14 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        heroImageView.addBlackGradientLayerInForeground(frame: self.view.bounds, colors:[.clear, .black])
-        
+        setupView()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+      setupView()
+    }
+    
+    private func setupView() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(heroImageView)
@@ -213,7 +221,7 @@ class DetailViewController: UIViewController {
             heroImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             heroImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.50),
             
-            titleLbl.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: -10),
+            titleLbl.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 85),
             titleLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
@@ -222,13 +230,13 @@ class DetailViewController: UIViewController {
             infoLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
             playButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
-            playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             playButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -5),
             playButton.heightAnchor.constraint(equalToConstant: 40),
             
             downloadButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
             downloadButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 5),
-            downloadButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            downloadButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             downloadButton.heightAnchor.constraint(equalToConstant: 40),
             
             descriptionLbl.topAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: 10),

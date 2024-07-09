@@ -10,6 +10,8 @@ import WebKit
 
 class DetailViewController: UIViewController {
     
+    private var movie: Media? = nil
+    
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,6 +71,7 @@ class DetailViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(playButtonClicked), for: .touchUpInside)
         return button
     }()
     
@@ -80,6 +83,7 @@ class DetailViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(downloadButtonClicked), for: .touchUpInside)
         return button
     }()
     
@@ -109,6 +113,32 @@ class DetailViewController: UIViewController {
         activateConstraints()
     }
     
+    @objc func downloadButtonClicked() {
+        print("download button clicked")
+        guard let downloadMovie = movie else {return}
+        if !DataPersistenceManager.shared.isMovieSaved(id: Int64(downloadMovie.id)) {
+            self.downloadButton.setTitle("Downloading...", for: .normal)
+            DataPersistenceManager.shared.downloadMovieWith(model: downloadMovie) { results in
+                switch results {
+                case .success(let success):
+                    print("saved to downloads")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.downloadButton.setTitle("Downloaded", for: .normal)
+                        self.downloadButton.backgroundColor = .lightGray
+                        self.downloadButton.isEnabled = false
+                    }
+                case .failure(let failure):
+                    print("error saving")
+                }
+            }
+        }
+    }
+    
+    @objc func playButtonClicked() {
+        VideoPlayerViewController.shared.playSampleVideo(from: self)
+    }
+    
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         checkDescriptionHeight()
@@ -122,7 +152,7 @@ class DetailViewController: UIViewController {
     
     public func configure(with model: Media) {
         let placeholderImage = UIImage(named: "placeholder")
-
+        movie = model
         guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(model.poster_path ?? "")") else {
             heroImageView.image = placeholderImage
             return
@@ -132,6 +162,12 @@ class DetailViewController: UIViewController {
         titleLbl.text = model.original_title ?? model.original_name ?? model.name
         infoLbl.text = "\(model.release_date ?? "") | \(model.vote_count) votes | \(model.vote_average) average votes"
         descriptionLbl.text = model.overview
+        
+        if DataPersistenceManager.shared.isMovieSaved(id: Int64(model.id)) {
+            downloadButton.isEnabled = false
+            downloadButton.backgroundColor = .lightGray
+            downloadButton.setTitle("Downloaded", for: .normal)
+        }
         
         checkDescriptionHeight()
     }

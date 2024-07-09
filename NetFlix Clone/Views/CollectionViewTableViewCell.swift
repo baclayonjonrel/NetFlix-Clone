@@ -59,12 +59,14 @@ class CollectionViewTableViewCell: UITableViewCell {
     
     private func downloadTitleAt(indexPath: IndexPath) {
         print("Dowloading to database \(movies[indexPath.row].original_title ?? movies[indexPath.row].original_name ?? movies[indexPath.row].name ?? "")")
-        DataPersistenceManager.shared.downloadMovieWith(model: movies[indexPath.row]) { result in
-            switch result {
-            case .success(let success):
-                print("saving successfull")
-            case .failure(let failure):
-                print("failed to save")
+        if !DataPersistenceManager.shared.isMovieSaved(id: Int64(movies[indexPath.row].id)) {
+            DataPersistenceManager.shared.downloadMovieWith(model: movies[indexPath.row]) { result in
+                switch result {
+                case .success(let success):
+                    print("saving successfull")
+                case .failure(let failure):
+                    print("failed to save")
+                }
             }
         }
     }

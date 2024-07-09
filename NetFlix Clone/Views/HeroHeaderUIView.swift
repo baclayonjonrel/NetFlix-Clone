@@ -56,18 +56,34 @@ class HeroHeaderUIView: UIView {
     @objc func downloadButtonClicked() {
         print("download button clicked")
         guard let downloadMovie = headerMovie else {return}
-        DataPersistenceManager.shared.downloadMovieWith(model: downloadMovie) { results in
-            switch results {
-            case .success(let success):
-                print("saved to downloads")
-            case .failure(let failure):
-                print("error saving")
+        if !DataPersistenceManager.shared.isMovieSaved(id: Int64(headerMovie?.id ?? 0)) {
+            self.downloadButton.setTitle("Downloading...", for: .normal)
+            DataPersistenceManager.shared.downloadMovieWith(model: downloadMovie) { results in
+                switch results {
+                case .success(let success):
+                    print("saved to downloads")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.downloadButton.setTitle("Downloaded", for: .normal)
+                        self.downloadButton.backgroundColor = .lightGray
+                        //self.downloadButton.isEnabled = false
+                    }
+                case .failure(let failure):
+                    print("error saving")
+                }
             }
         }
     }
     
     @objc func playButtonClicked() {
         print("play button clicked")
+        var responder: UIResponder? = self.next
+        while responder != nil {
+            if let viewController = responder as? UIViewController {
+                VideoPlayerViewController.shared.playSampleVideo(from: viewController)
+                break
+            }
+            responder = responder?.next
+        }
     }
     
     private func applyConstraints() {
@@ -95,9 +111,28 @@ class HeroHeaderUIView: UIView {
             heroImageView.image = placeholderImage
             return
         }
-        heroImageView.sd_setImage(with: url, placeholderImage: placeholderImage)
         
+        DispatchQueue.main.async {
+            self.heroImageView.sd_setImage(with: url, placeholderImage: placeholderImage)
+        }
+
+        DispatchQueue.global(qos: .background).async {
+            var isSaved = false
+
+            DispatchQueue.main.sync {
+                isSaved = DataPersistenceManager.shared.isMovieSaved(id: Int64(self.headerMovie?.id ?? 0))
+            }
+            
+            DispatchQueue.main.async {
+                if isSaved {
+                    self.downloadButton.setTitle("Downloaded", for: .normal)
+                    self.downloadButton.backgroundColor = .lightGray
+                    //self.downloadButton.isEnabled = false
+                }
+            }
+        }
     }
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)

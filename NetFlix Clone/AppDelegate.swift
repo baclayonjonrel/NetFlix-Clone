@@ -31,6 +31,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+
+        // Make sure the root controller has been set
+        // (won't initially be set when the app is launched)
+        if let navigationController = window?.rootViewController as? UINavigationController {
+
+            // If the visible view controller is the
+            // view controller you'd like to rotate, allow
+            // that window to support all orientations
+            if navigationController.visibleViewController is VideoPlayerViewController {
+                return UIInterfaceOrientationMask.landscape
+            }
+
+            // Else only allow the window to support portrait orientation
+            else {
+                return UIInterfaceOrientationMask.all
+            }
+        }
+
+        // If the root view controller hasn't been set yet, just
+        // return anything
+        return UIInterfaceOrientationMask.portrait
+    }
 
     // MARK: - Core Data stack
 

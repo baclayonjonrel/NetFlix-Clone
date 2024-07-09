@@ -17,6 +17,7 @@ class TitleTableViewCell: UITableViewCell {
         button.setImage(image, for: .normal)
         button.tintColor = .blue
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(playButtonClicked), for: .touchUpInside)
         return button
     }()
     
@@ -78,5 +79,17 @@ class TitleTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError()
+    }
+    
+    @objc func playButtonClicked() {
+        print("play button clicked")
+        var responder: UIResponder? = self.next
+        while responder != nil {
+            if let viewController = responder as? UIViewController {
+                VideoPlayerViewController.shared.playSampleVideo(from: viewController)
+                break
+            }
+            responder = responder?.next
+        }
     }
 }

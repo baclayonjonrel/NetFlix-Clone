@@ -79,4 +79,22 @@ class DataPersistenceManager {
             completion(.failure(DatabaseError.FailedToDeleteData))
         }
     }
+    
+    func isMovieSaved(id: Int64) -> Bool {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return false
+        }
+        
+        let context = appDelegate.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<MovieItem> = MovieItem.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            return !results.isEmpty
+        } catch {
+            print("Failed to fetch movie: \(error)")
+            return false
+        }
+    }
 }

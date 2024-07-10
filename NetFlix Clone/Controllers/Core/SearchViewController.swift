@@ -81,9 +81,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
             return UITableViewCell()
         }
-        let title = discoverMovies[indexPath.row].original_name ?? discoverMovies[indexPath.row].original_title ?? discoverMovies[indexPath.row].name ?? ""
-        let posterPath = "https://image.tmdb.org/t/p/w500\(discoverMovies[indexPath.row].poster_path ?? "")"
-        cell.configure(with: TitleViewModel(titleName: title, posterURL: posterPath))
+        let title = discoverMovies[indexPath.row]
+        cell.configure(with: title)
         return cell
     }
     

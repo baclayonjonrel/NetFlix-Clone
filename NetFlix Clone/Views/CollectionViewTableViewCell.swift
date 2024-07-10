@@ -49,9 +49,6 @@ class CollectionViewTableViewCell: UITableViewCell {
     
     public func configure(with movie: [Media]) {
         movies = movie
-//        for mov in movies {
-//            print(mov.original_name ?? mov.original_title ?? mov.name)
-//        }
         DispatchQueue.main.async {
             self.collectionView.reloadData()
         }
@@ -78,7 +75,7 @@ extension CollectionViewTableViewCell: UICollectionViewDelegate, UICollectionVie
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configure(withL: movies[indexPath.row].poster_path ?? "")
+        cell.configure(with: movies[indexPath.row].poster_path ?? "")
         return cell
     }
     

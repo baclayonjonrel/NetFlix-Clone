@@ -31,7 +31,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
         posterImageView.frame = contentView.bounds
     }
     
-    public func configure(withL moviePoster: String) {
+    public func configure(with moviePoster: String) {
         let placeholderImage = UIImage(named: "placeholder")
 
         guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(moviePoster)") else {

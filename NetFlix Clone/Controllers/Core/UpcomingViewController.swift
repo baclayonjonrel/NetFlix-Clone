@@ -60,9 +60,8 @@ extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
             return UITableViewCell()
         }
-        let title = upcomingMovies[indexPath.row].name ?? upcomingMovies[indexPath.row].original_name ?? upcomingMovies[indexPath.row].original_title ?? ""
-        let posterPath = "https://image.tmdb.org/t/p/w500\(upcomingMovies[indexPath.row].poster_path ?? "")"
-        cell.configure(with: TitleViewModel(titleName: title, posterURL: posterPath))
+        let title = upcomingMovies[indexPath.row]
+        cell.configure(with: title)
         return cell
     }
     

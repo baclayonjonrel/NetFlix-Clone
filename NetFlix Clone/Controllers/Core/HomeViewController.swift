@@ -19,6 +19,7 @@ class HomeViewController: UIViewController {
     
     var randomTrendingMovie: Media? = nil
     private var headerView = HeroHeaderUIView()
+    private var hasErrorOccurred: Bool = false
     
     let sectionTitles: [String] = ["Trending Movies", "Trending Tv", "Popular", "Upcoming Movies", "Top Rated"]
     var trendingMovie: [Media] = []
@@ -97,91 +98,6 @@ class HomeViewController: UIViewController {
         super.viewDidLayoutSubviews()
         homeFeedTable.frame = view.bounds
     }
-    
-    private func getTrendingMovies() {
-        APICaller.shared.getTrendingMovies { results in
-            switch results {
-            case .success(let movies):
-                for movie in movies {
-                    self.trendingMovie.append(movie)
-                }
-                for i in 0..<self.trendingMovie.count {
-                    print("Trending Movie: \(self.trendingMovie[i].original_title ?? self.trendingMovie[i].original_name ?? "Untitled")")
-                }
-            case .failure(let error):
-                print(error)
-            }
-            
-        }
-    }
-    
-    private func getTrendingTvs() {
-        APICaller.shared.getTrendingTvs { results in
-            switch results {
-            case .success(let tvs):
-                for tv in tvs {
-                    self.trendingTvs.append(tv)
-                }
-                for i in 0..<self.trendingTvs.count {
-                    print("Trending TV: \(self.trendingTvs[i].name ?? "Untitled")")
-                }
-            case .failure(let error):
-                print(error)
-            }
-            
-        }
-    }
-    
-    private func getUpcomingMovies() {
-        APICaller.shared.getTrendingUpcomingMovies { results in
-            switch results {
-            case .success(let movies):
-                for movie in movies {
-                    self.upcomingMovie.append(movie)
-                }
-                for i in 0..<self.upcomingMovie.count {
-                    print("Upcoming Movie: \(self.upcomingMovie[i].original_title ?? self.upcomingMovie[i].original_name ?? "Untitled")")
-                }
-            case .failure(let error):
-                print(error)
-            }
-            
-        }
-    }
-    
-    private func getPopularMovies() {
-        APICaller.shared.getPopularMovies { results in
-            switch results {
-            case .success(let movies):
-                for movie in movies {
-                    self.popularMovie.append(movie)
-                }
-                for i in 0..<self.popularMovie.count {
-                    print("popular Movie: \(self.popularMovie[i].original_title ?? self.popularMovie[i].original_name ?? "Untitled")")
-                }
-            case .failure(let error):
-                print(error)
-            }
-            
-        }
-    }
-    
-    private func getTopRatedMovies() {
-        APICaller.shared.getTopRatedMovies { results in
-            switch results {
-            case .success(let movies):
-                for movie in movies {
-                    self.topRatedMovies.append(movie)
-                }
-                for i in 0..<self.topRatedMovies.count {
-                    print("Top Rated Movie: \(self.topRatedMovies[i].original_title ?? self.topRatedMovies[i].original_name ?? "Untitled")")
-                }
-            case .failure(let error):
-                print(error)
-            }
-            
-        }
-    }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
@@ -201,6 +117,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.delegate = self
         
+        if hasErrorOccurred {
+            return cell
+        }
+        
         switch indexPath.section {
         case Section.TrendingMovies.rawValue:
             APICaller.shared.getTrendingMovies { results in
@@ -208,7 +128,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .success(let movies):
                     cell.configure(with: movies)
                 case .failure(let error):
-                    print(error)
+                    self.handleError(error)
                 }
             }
         case Section.TrendingTV.rawValue:
@@ -217,7 +137,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .success(let movies):
                     cell.configure(with: movies)
                 case .failure(let error):
-                    print(error)
+                    self.handleError(error)
                 }
             }
         case Section.Popular.rawValue:
@@ -226,7 +146,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .success(let movies):
                     cell.configure(with: movies)
                 case .failure(let error):
-                    print(error)
+                    self.handleError(error)
                 }
             }
         case Section.Upcoming.rawValue:
@@ -235,7 +155,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .success(let movies):
                     cell.configure(with: movies)
                 case .failure(let error):
-                    print(error)
+                    self.handleError(error)
                 }
             }
         case Section.TopRated.rawValue:
@@ -244,7 +164,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .success(let movies):
                     cell.configure(with: movies)
                 case .failure(let error):
-                    print(error)
+                    self.handleError(error)
                 }
             }
         default:
@@ -278,6 +198,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionTitles[section]
+    }
+    
+    private func handleError(_ error: Error) {
+        guard !hasErrorOccurred else { return }
+        hasErrorOccurred = true
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            self.tabBarController?.selectedIndex = 3
+        }
     }
 }
 

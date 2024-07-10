@@ -65,9 +65,10 @@ extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
             return UITableViewCell()
         }
-        let title = downloadedMovies[indexPath.row].name ?? downloadedMovies[indexPath.row].original_name ?? downloadedMovies[indexPath.row].original_title ?? ""
-        let posterPath = "https://image.tmdb.org/t/p/w500\(downloadedMovies[indexPath.row].poster_path ?? "")"
-        cell.configure(with: TitleViewModel(titleName: title, posterURL: posterPath))
+        let movieItem = downloadedMovies[indexPath.row]
+        let title = Media(id: Int(movieItem.id), media_type: movieItem.media_type, original_name: movieItem.original_name, original_title: movieItem.original_title, poster_path: movieItem.poster_path, overview: movieItem.overview, vote_count: Int(movieItem.vote_count), release_date: movieItem.release_date, vote_average: movieItem.vote_average, name: movieItem.name)
+        
+        cell.configure(with: title)
         return cell
     }
     

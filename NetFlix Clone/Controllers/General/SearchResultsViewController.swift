@@ -52,7 +52,7 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as? MovieCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configure(withL: searchedMovie[indexPath.row].poster_path ?? "")
+        cell.configure(with: searchedMovie[indexPath.row].poster_path ?? "")
         return cell
     }
     

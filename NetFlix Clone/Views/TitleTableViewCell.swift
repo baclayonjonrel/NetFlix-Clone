@@ -71,10 +71,10 @@ class TitleTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate(playButtonContraints)
     }
     
-    public func configure(with model: TitleViewModel) {
-        guard let url = URL(string: model.posterURL) else {return}
+    public func configure(with model: Media) {
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(model.poster_path ?? "")") else {return}
         posterImage.sd_setImage(with: url, completed: nil)
-        titleLbl.text = model.titleName
+        titleLbl.text = model.original_title ?? model.original_name ?? model.name
     }
     
     required init?(coder: NSCoder) {

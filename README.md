@@ -13,11 +13,19 @@ Welcome to the Netflix Clone! This app is designed to help you explore and disco
 
 ## Screenshots
 
-*coming soon*
+<div style="overflow-x: scroll; white-space: nowrap;">
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/7d567b9b3a82eb0078d04168cd101168f8d1fc1c/images/Netflix%20Clone/ss1.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/7d567b9b3a82eb0078d04168cd101168f8d1fc1c/images/Netflix%20Clone/ss2.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/7d567b9b3a82eb0078d04168cd101168f8d1fc1c/images/Netflix%20Clone/ss3.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/7d567b9b3a82eb0078d04168cd101168f8d1fc1c/images/Netflix%20Clone/ss5.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/7d567b9b3a82eb0078d04168cd101168f8d1fc1c/images/Netflix%20Clone/ss6.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/7d567b9b3a82eb0078d04168cd101168f8d1fc1c/images/Netflix%20Clone/ss7.png" alt="Home Screen" width="150"/>
+    <img src="https://github.com/baclayonjonrel/Pokedex/blob/7d567b9b3a82eb0078d04168cd101168f8d1fc1c/images/Netflix%20Clone/ss9.png" alt="Home Screen" width="150"/>
+</div>
 
 ## Screen Recording
 
-*coming soon*
+[*Check on my porfolio website*](https://jonrelbaclayon.netlify.app/#projects)
 
 ## Installation
 

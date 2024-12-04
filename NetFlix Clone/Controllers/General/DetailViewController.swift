@@ -27,7 +27,7 @@ class DetailViewController: UIViewController {
     
     private let titleLbl: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: 30)
         label.text = "Title"
         label.textAlignment = .center
@@ -140,6 +140,8 @@ class DetailViewController: UIViewController {
         if isSaved {
             self.downloadButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
             self.downloadButton.setTitle("Downloaded", for: .normal)
+            self.downloadButton.tintColor = .white
+            self.downloadButton.imageView?.tintColor = .white
         }
         
     }
@@ -264,7 +266,7 @@ class DetailViewController: UIViewController {
             heroImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             heroImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.45),
             
-            titleLbl.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 75),
+            titleLbl.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -55),
             titleLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
@@ -272,12 +274,12 @@ class DetailViewController: UIViewController {
             infoLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             infoLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            playButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
+            playButton.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 160),
             playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             playButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -5),
             playButton.heightAnchor.constraint(equalToConstant: 50),
             
-            downloadButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
+            downloadButton.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 160),
             downloadButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 5),
             downloadButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             downloadButton.heightAnchor.constraint(equalToConstant: 50),

@@ -15,6 +15,8 @@
 		F71ED5DA2C3B6E6D0041791C /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = F71ED5D92C3B6E6D0041791C /* SDWebImage */; };
 		F71ED5E02C3B6F070041791C /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F71ED5DF2C3B6F070041791C /* SDWebImageMapKit */; };
 		F7404B332C3BBE3000CCDA85 /* NetFlixCloneModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F7404B312C3BBE3000CCDA85 /* NetFlixCloneModel.xcdatamodeld */; };
+		F74BAE432CFFCEA0001840B4 /* SampleVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F74BAE422CFFCEA0001840B4 /* SampleVideo.mp4 */; };
+		F762EB082CFFDC8E006CAF7F /* Loady in Frameworks */ = {isa = PBXBuildFile; productRef = F762EB072CFFDC8E006CAF7F /* Loady */; };
 		F782AA152C35DAB900BCFF7A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F782AA142C35DAB900BCFF7A /* AppDelegate.swift */; };
 		F782AA172C35DAB900BCFF7A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F782AA162C35DAB900BCFF7A /* SceneDelegate.swift */; };
 		F782AA192C35DAB900BCFF7A /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F782AA182C35DAB900BCFF7A /* MainTabBarViewController.swift */; };
@@ -29,7 +31,6 @@
 		F782AA3D2C35F94300BCFF7A /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F782AA3C2C35F94300BCFF7A /* APICaller.swift */; };
 		F782AA3F2C35FD5000BCFF7A /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = F782AA3E2C35FD5000BCFF7A /* Media.swift */; };
 		F7DE68E52C3CED9200CD5E77 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DE68E42C3CED9200CD5E77 /* VideoPlayerViewController.swift */; };
-		F7DE68E92C3CFB4700CD5E77 /* SampleVideo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F7DE68E82C3CFB4700CD5E77 /* SampleVideo.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		F71ED5C92C3A524B0041791C /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		F71ED5CF2C3ACDB00041791C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		F7404B322C3BBE3000CCDA85 /* NetFlixCloneModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NetFlixCloneModel.xcdatamodel; sourceTree = "<group>"; };
+		F74BAE422CFFCEA0001840B4 /* SampleVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = SampleVideo.mp4; sourceTree = "<group>"; };
 		F782AA112C35DAB900BCFF7A /* NetFlix Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NetFlix Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F782AA142C35DAB900BCFF7A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F782AA162C35DAB900BCFF7A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,7 +57,6 @@
 		F782AA3C2C35F94300BCFF7A /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
 		F782AA3E2C35FD5000BCFF7A /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		F7DE68E42C3CED9200CD5E77 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
-		F7DE68E82C3CFB4700CD5E77 /* SampleVideo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = SampleVideo.mp4; path = ../../../../../Downloads/SampleVideo.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F762EB082CFFDC8E006CAF7F /* Loady in Frameworks */,
 				F71ED5E02C3B6F070041791C /* SDWebImageMapKit in Frameworks */,
 				F71ED5DA2C3B6E6D0041791C /* SDWebImage in Frameworks */,
 			);
@@ -166,7 +168,7 @@
 		F7DE68E12C3CED2400CD5E77 /* VideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				F7DE68E82C3CFB4700CD5E77 /* SampleVideo.mp4 */,
+				F74BAE422CFFCEA0001840B4 /* SampleVideo.mp4 */,
 				F7DE68E42C3CED9200CD5E77 /* VideoPlayerViewController.swift */,
 			);
 			path = VideoPlayer;
@@ -191,6 +193,7 @@
 			packageProductDependencies = (
 				F71ED5D92C3B6E6D0041791C /* SDWebImage */,
 				F71ED5DF2C3B6F070041791C /* SDWebImageMapKit */,
+				F762EB072CFFDC8E006CAF7F /* Loady */,
 			);
 			productName = "NetFlix Clone";
 			productReference = F782AA112C35DAB900BCFF7A /* NetFlix Clone.app */;
@@ -223,6 +226,7 @@
 			packageReferences = (
 				F71ED5BB2C3A0A830041791C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				F71ED5C42C3A3E320041791C /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				F762EB062CFFDC8E006CAF7F /* XCRemoteSwiftPackageReference "loady" */,
 			);
 			productRefGroup = F782AA122C35DAB900BCFF7A /* Products */;
 			projectDirPath = "";
@@ -238,7 +242,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7DE68E92C3CFB4700CD5E77 /* SampleVideo.mp4 in Resources */,
+				F74BAE432CFFCEA0001840B4 /* SampleVideo.mp4 in Resources */,
 				F782AA1E2C35DABB00BCFF7A /* Assets.xcassets in Resources */,
 				F782AA212C35DABB00BCFF7A /* Base in Resources */,
 			);
@@ -499,6 +503,14 @@
 				minimumVersion = 5.19.4;
 			};
 		};
+		F762EB062CFFDC8E006CAF7F /* XCRemoteSwiftPackageReference "loady" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/farshadjahanmanesh/loady.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.8;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -511,6 +523,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F71ED5C42C3A3E320041791C /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImageMapKit;
+		};
+		F762EB072CFFDC8E006CAF7F /* Loady */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F762EB062CFFDC8E006CAF7F /* XCRemoteSwiftPackageReference "loady" */;
+			productName = Loady;
 		};
 /* End XCSwiftPackageProductDependency section */
 

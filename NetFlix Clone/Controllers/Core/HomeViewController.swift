@@ -45,7 +45,7 @@ class HomeViewController: UIViewController {
         
         configureNavBar()
         
-        headerView = HeroHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 500))
+        headerView = HeroHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 600))
         homeFeedTable.tableHeaderView = headerView
         configureHeroHeader()
     }
@@ -62,8 +62,6 @@ class HomeViewController: UIViewController {
                 guard let selectedRandom = movies.randomElement() else {return}
                 
                 self?.randomTrendingMovie = selectedRandom
-                
-                let selectedTitle = selectedRandom.original_title ?? selectedRandom.original_name ?? selectedRandom.name
                 
                 self?.headerView.configure(with: selectedRandom)
             case .failure(let error):

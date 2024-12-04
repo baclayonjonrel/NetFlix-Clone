@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import Loady
 
 class DetailViewController: UIViewController {
     
@@ -27,7 +28,7 @@ class DetailViewController: UIViewController {
     private let titleLbl: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.font = .systemFont(ofSize: 25)
+        label.font = .systemFont(ofSize: 30)
         label.text = "Title"
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +38,7 @@ class DetailViewController: UIViewController {
     private let infoLbl: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.font = .systemFont(ofSize: 8)
+        label.font = .systemFont(ofSize: 13)
         label.text = "information"
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -65,26 +66,36 @@ class DetailViewController: UIViewController {
     
     private let playButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Play", for: .normal)
-        button.layer.borderColor = UIColor.systemBackground.cgColor
-        button.layer.borderWidth = 1
+        
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "play")
+        config.title = "Play"
+        config.imagePadding = 10
+        button.configuration = config
+        
+        button.tintColor = .white
+        button.layer.cornerRadius = 15
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 0
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(playButtonClicked), for: .touchUpInside)
         return button
     }()
     
-    private let downloadButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Save to list", for: .normal)
-        button.layer.borderColor = UIColor.systemBackground.cgColor
-        button.layer.borderWidth = 1
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 0
+    private let downloadButton: LoadyButton = {
+        let button = LoadyButton(frame: .zero)
         button.translatesAutoresizingMaskIntoConstraints = false
+        
+        let spacing: CGFloat = 10
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: spacing)
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: 0)
+
+        button.backgroundColor = .systemGray
+        button.layer.cornerRadius = 15
+        button.loadingColor = .white
+        button.tintColor = .white
+        button.setTitle("Download", for: .normal)
+        button.setImage(UIImage(systemName: "arrow.down.to.line.circle"), for: .normal)
+        button.setAnimation(LoadyAnimationType.indicator(with: .init(indicatorViewStyle: .light)))
         button.addTarget(self, action: #selector(downloadButtonClicked), for: .touchUpInside)
         return button
     }()
@@ -93,6 +104,7 @@ class DetailViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        
         return imageView
     }()
     
@@ -119,24 +131,54 @@ class DetailViewController: UIViewController {
         contentView.addSubview(downloadButton)
         view.backgroundColor = .systemBackground
         activateConstraints()
+        
+        addBlackGradientToImageView(heroImageView)
+    }
+    
+    private func checkIfSaved(model: Media) {
+        let isSaved  = DataPersistenceManager.shared.isMovieSaved(id: Int64(model.id))
+        if isSaved {
+            self.downloadButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+            self.downloadButton.setTitle("Downloaded", for: .normal)
+        }
+        
+    }
+    
+    private func addBlackGradientToImageView(_ imageView: UIImageView) {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradient.locations = [0.0, 1.0]
+        gradient.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradient.endPoint = CGPoint(x: 0.5, y: 1.0)
+        gradient.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.80)
+
+        gradient.contentsScale = UIScreen.main.scale
+        gradient.contentsGravity = .resizeAspectFill
+
+        imageView.layer.insertSublayer(gradient, at: 0)
     }
     
     @objc func downloadButtonClicked() {
-        print("download button clicked")
         guard let downloadMovie = movie else {return}
         if !DataPersistenceManager.shared.isMovieSaved(id: Int64(downloadMovie.id)) {
-            self.downloadButton.setTitle("Saving...", for: .normal)
+            self.downloadButton.startLoading()
+            self.downloadButton.imageView?.isHidden = true
             DataPersistenceManager.shared.downloadMovieWith(model: downloadMovie) { results in
                 switch results {
-                case .success(let success):
-                    print("saved to downloads")
+                case .success(_):
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.downloadButton.setTitle("Saved", for: .normal)
-                        self.downloadButton.backgroundColor = .lightGray
-                        self.downloadButton.isEnabled = false
+                        self.downloadButton.stopLoading()
+                        self.downloadButton.setTitle("Downloaded", for: .normal)
+                        self.downloadButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+                        self.downloadButton.imageView?.isHidden = false
                     }
-                case .failure(let failure):
-                    print("error saving")
+                case .failure(_):
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.downloadButton.stopLoading()
+                        self.downloadButton.setTitle("Download", for: .normal)
+                        self.downloadButton.setImage(UIImage(systemName: "arrow.down.to.line.circle"), for: .normal)
+                        self.downloadButton.imageView?.isHidden = false
+                    }
                 }
             }
         }
@@ -178,6 +220,7 @@ class DetailViewController: UIViewController {
         }
         
         checkDescriptionHeight()
+        checkIfSaved(model: model)
     }
     
     private func checkDescriptionHeight() {
@@ -221,7 +264,7 @@ class DetailViewController: UIViewController {
             heroImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             heroImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.45),
             
-            titleLbl.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 105),
+            titleLbl.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 75),
             titleLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             titleLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
@@ -232,12 +275,12 @@ class DetailViewController: UIViewController {
             playButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
             playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             playButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -5),
-            playButton.heightAnchor.constraint(equalToConstant: 40),
+            playButton.heightAnchor.constraint(equalToConstant: 50),
             
             downloadButton.topAnchor.constraint(equalTo: infoLbl.bottomAnchor, constant: 10),
             downloadButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 5),
             downloadButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            downloadButton.heightAnchor.constraint(equalToConstant: 40),
+            downloadButton.heightAnchor.constraint(equalToConstant: 50),
             
             descriptionLbl.topAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: 10),
             descriptionLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -250,20 +293,3 @@ class DetailViewController: UIViewController {
     }
 }
 
-extension UIView {
-    // For insert layer in Foreground
-    func addBlackGradientLayerInForeground(frame: CGRect, colors: [UIColor]) {
-        let gradient = CAGradientLayer()
-        gradient.frame = frame
-        gradient.colors = colors.map { $0.cgColor }
-        self.layer.addSublayer(gradient)
-    }
-    
-    // For insert layer in background
-    func addBlackGradientLayerInBackground(frame: CGRect, colors: [UIColor]) {
-        let gradient = CAGradientLayer()
-        gradient.frame = frame
-        gradient.colors = colors.map { $0.cgColor }
-        self.layer.insertSublayer(gradient, at: 0)
-    }
-}

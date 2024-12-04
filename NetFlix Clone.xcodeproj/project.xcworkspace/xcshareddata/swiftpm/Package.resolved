@@ -1,6 +1,15 @@
 {
-  "originHash" : "bf4fde6889d28afce65e53dd1e4748bffc4c6d2db4607a00056b9ad160d3257c",
+  "originHash" : "95108754d5207e9a9ffb3732790987ed57637fe8d3eb578e39e23dde0d955ffd",
   "pins" : [
+    {
+      "identity" : "loady",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/farshadjahanmanesh/loady.git",
+      "state" : {
+        "revision" : "3ef0c35822def0402884257b8eaa18c1f88bea55",
+        "version" : "1.0.8"
+      }
+    },
     {
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",

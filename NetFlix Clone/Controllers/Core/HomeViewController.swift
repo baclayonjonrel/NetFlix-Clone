@@ -7,14 +7,6 @@
 
 import UIKit
 
-enum Section: Int {
-    case TrendingMovies = 0
-    case TrendingTV = 1
-    case Popular = 2
-    case Upcoming = 3
-    case TopRated = 4
-}
-
 class HomeViewController: UIViewController {
     
     var viewModel = MovieViewModel()
@@ -172,4 +164,12 @@ extension HomeViewController: CollectionViewTableViewCellDelegate {
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
+}
+
+enum Section: Int {
+    case TrendingMovies = 0
+    case TrendingTV = 1
+    case Popular = 2
+    case Upcoming = 3
+    case TopRated = 4
 }

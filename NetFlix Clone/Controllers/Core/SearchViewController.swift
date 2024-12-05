@@ -52,6 +52,10 @@ class SearchViewController: UIViewController {
     }
     
     private func setupSearchController() {
+        if let resultsController = searchController.searchResultsController as? SearchResultsViewController {
+            resultsController.delegate = self
+        }
+        
         searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         navigationItem.searchController?.isActive = true

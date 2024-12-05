@@ -47,7 +47,7 @@ class DetailViewController: UIViewController {
     
     private let descriptionLbl: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 3
+        label.numberOfLines = 5
         label.font = .systemFont(ofSize: 15)
         label.text = "description"
         label.textAlignment = .center
@@ -198,8 +198,8 @@ class DetailViewController: UIViewController {
     
     @objc private func didTapSeeMore() {
         isExpanded.toggle()
-        descriptionLbl.numberOfLines = isExpanded ? 0 : 3
-        seeMoreButton.setTitle(isExpanded ? "See Less" : "See More", for: .normal)
+        descriptionLbl.numberOfLines = isExpanded ? 0 : 5
+        seeMoreButton.setTitle(isExpanded ? "Show Less" : "See More", for: .normal)
     }
     
     public func configure(with model: Media) {
@@ -230,7 +230,7 @@ class DetailViewController: UIViewController {
         let width = descriptionLbl.frame.width
         let font = descriptionLbl.font!
         
-        if isTextExceedingLines(text: text, font: font, width: width, maxLines: 3) {
+        if isTextExceedingLines(text: text, font: font, width: width, maxLines: 5) {
             seeMoreButton.isHidden = false
         } else {
             seeMoreButton.isHidden = true

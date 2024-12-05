@@ -148,11 +148,11 @@ class DetailViewController: UIViewController {
     
     private func addBlackGradientToImageView(_ imageView: UIImageView) {
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradient.colors = [UIColor.clear.cgColor, UIColor.systemBackground.cgColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradient.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradient.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.80)
+        gradient.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.75)
 
         gradient.contentsScale = UIScreen.main.scale
         gradient.contentsGravity = .resizeAspectFill
@@ -274,17 +274,17 @@ class DetailViewController: UIViewController {
             infoLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             infoLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             
-            playButton.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 160),
+            playButton.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 130),
             playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             playButton.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -5),
             playButton.heightAnchor.constraint(equalToConstant: 50),
             
-            downloadButton.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 160),
+            downloadButton.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 130),
             downloadButton.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 5),
             downloadButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             downloadButton.heightAnchor.constraint(equalToConstant: 50),
             
-            descriptionLbl.topAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: 10),
+            descriptionLbl.topAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: 20),
             descriptionLbl.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             descriptionLbl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             

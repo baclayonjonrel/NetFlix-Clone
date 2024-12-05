@@ -7,9 +7,18 @@
 
 import UIKit
 
+protocol DownloadViewControllerDelegate: AnyObject {
+    func deleteMovie(movie: Media)
+}
+
 class TitleTableViewCell: UITableViewCell {
     
+    weak var delegate: DownloadViewControllerDelegate?
+    
     static let identifier = "TitleTableViewCell"
+    var hideDelete = false
+    private var selectedMovie: Media?
+    private var playButtonTrailingConstraint: NSLayoutConstraint?
     
     private let playButton: UIButton = {
         let button = UIButton()
@@ -18,6 +27,16 @@ class TitleTableViewCell: UITableViewCell {
         button.tintColor = .blue
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(playButtonClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    private let deleteButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30))
+        button.setImage(image, for: .normal)
+        button.tintColor = .red
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(deleteButtonClicked), for: .touchUpInside)
         return button
     }()
     
@@ -43,11 +62,12 @@ class TitleTableViewCell: UITableViewCell {
         contentView.addSubview(posterImage)
         contentView.addSubview(titleLbl)
         contentView.addSubview(playButton)
+        contentView.addSubview(deleteButton)
         
-        applyConstraints()
+        applyConstraints(hideDelete: hideDelete)
     }
     
-    private func applyConstraints() {
+    private func applyConstraints(hideDelete: Bool) {
         let posterImageConstraints = [
             posterImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
             posterImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
@@ -57,28 +77,63 @@ class TitleTableViewCell: UITableViewCell {
         
         let titleLblContraints = [
             titleLbl.leadingAnchor.constraint(equalTo: posterImage.trailingAnchor, constant: 20),
-            titleLbl.trailingAnchor.constraint(lessThanOrEqualTo: playButton.leadingAnchor, constant: -10),
+            titleLbl.trailingAnchor.constraint(lessThanOrEqualTo: playButton.leadingAnchor, constant: 5),
             titleLbl.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ]
         
         let playButtonContraints = [
-            playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            playButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            playButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            playButton.widthAnchor.constraint(equalToConstant: 40)
+        ]
+        
+        let deleteButtonsConstraints = [
+            deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            deleteButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ]
         
         NSLayoutConstraint.activate(posterImageConstraints)
         NSLayoutConstraint.activate(titleLblContraints)
         NSLayoutConstraint.activate(playButtonContraints)
+        NSLayoutConstraint.activate(deleteButtonsConstraints)
+        if playButtonTrailingConstraint == nil {
+            playButtonTrailingConstraint = playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -70)
+            playButtonTrailingConstraint?.isActive = true
+        }
     }
     
-    public func configure(with model: Media) {
+    public func configure(with model: Media, hideDelete: Bool) {
         guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(model.poster_path ?? "")") else {return}
+        selectedMovie = model
+        self.updateDeleteButtonVisibility(isHidden: hideDelete)
         posterImage.sd_setImage(with: url, completed: nil)
         titleLbl.text = model.original_title ?? model.original_name ?? model.name
     }
     
     required init?(coder: NSCoder) {
         fatalError()
+    }
+    
+    func updateDeleteButtonVisibility(isHidden: Bool) {
+        playButtonTrailingConstraint?.isActive = false
+        
+        if !isHidden {
+            deleteButton.isHidden = true
+            playButtonTrailingConstraint = playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+        } else {
+            deleteButton.isHidden = false
+            playButtonTrailingConstraint = playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -70)
+        }
+        
+        playButtonTrailingConstraint?.isActive = true
+        
+        contentView.layoutIfNeeded()
+    }
+    
+    @objc func deleteButtonClicked() {
+        print("delete button clicked")
+        if let movie = selectedMovie {
+            self.delegate?.deleteMovie(movie: movie)
+        }
     }
     
     @objc func playButtonClicked() {

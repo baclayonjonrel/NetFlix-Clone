@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//166f80c9f657e9f3c45bbc52370ba257
 
 struct Constants {
     static let API_KEY = "166f80c9f657e9f3c45bbc52370ba257"

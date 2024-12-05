@@ -16,7 +16,7 @@ class CollectionViewTableViewCell: UITableViewCell {
     static let identifier = "CollectionViewTableViewCell"
     
     weak var delegate: CollectionViewTableViewCellDelegate?
-    
+    private var movieViewModel: MoviePersistenceViewModel!
     private var movies: [Media] = [Media]()
     
     private let collectionView: UICollectionView = {
@@ -31,11 +31,12 @@ class CollectionViewTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .systemPink
+        contentView.backgroundColor = .clear
         contentView.addSubview(collectionView)
          
         collectionView.delegate = self
         collectionView.dataSource = self
+        movieViewModel = MoviePersistenceViewModel()
     }
     
     required init?(coder: NSCoder) {
@@ -56,16 +57,13 @@ class CollectionViewTableViewCell: UITableViewCell {
     
     private func downloadTitleAt(indexPath: IndexPath) {
         print("Dowloading to database \(movies[indexPath.row].original_title ?? movies[indexPath.row].original_name ?? movies[indexPath.row].name ?? "")")
-        if !DataPersistenceManager.shared.isMovieSaved(id: Int64(movies[indexPath.row].id)) {
-            DataPersistenceManager.shared.downloadMovieWith(model: movies[indexPath.row]) { result in
-                switch result {
-                case .success(let success):
-                    print("saving successfull")
-                case .failure(let failure):
-                    print("failed to save")
-                }
-            }
+        if !movieViewModel.isMovieSaved(id: Int64(movies[indexPath.row].id)) {
+            downloadMovie(model: movies[indexPath.row])
         }
+    }
+    
+    func downloadMovie(model: Media) {
+        movieViewModel.downloadMovie(model: model)
     }
 }
 

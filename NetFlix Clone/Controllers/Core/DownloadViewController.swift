@@ -9,6 +9,7 @@ import UIKit
 
 class DownloadViewController: UIViewController {
     
+    private var movieViewModel: MoviePersistenceViewModel!
     private var downloadedMovies: [MovieItem] = [MovieItem]()
 
     private let downloadedTable: UITableView = {
@@ -25,35 +26,33 @@ class DownloadViewController: UIViewController {
         
         view.addSubview(downloadedTable)
         view.backgroundColor = .systemBackground
-        title = "My List"
+        title = "Downloads"
         navigationController?.navigationBar.prefersLargeTitles = false
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        fetchDownloadedMovie()
-    }
-    
-    private func fetchDownloadedMovie() {
-        DataPersistenceManager.shared.fetchMovieFromDatabase { [weak self] result in
-            switch result {
-            case .success(let movies):
-                self?.downloadedMovies = movies
-                DispatchQueue.main.async {
-                    self?.downloadedTable.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
+        movieViewModel = MoviePersistenceViewModel()
+        movieViewModel.onMoviesUpdate = { [weak self] in
+            self?.downloadedMovies = self?.movieViewModel.savedMovies ?? []
+            DispatchQueue.main.async {
+                self?.downloadedTable.reloadData()
             }
+        }
+        
+        movieViewModel.onError = { errorMessage in
+            print(errorMessage)
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        movieViewModel.fetchSavedMovies()
+    }
+        
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         downloadedTable.frame = view.bounds
     }
     
+    func deleteMovie(model: MovieItem) {
+        movieViewModel.deleteMovie(model: model)
+    }
 }
 
 extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
@@ -67,8 +66,8 @@ extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
         }
         let movieItem = downloadedMovies[indexPath.row]
         let title = Media(id: Int(movieItem.id), media_type: movieItem.media_type, original_name: movieItem.original_name, original_title: movieItem.original_title, poster_path: movieItem.poster_path, overview: movieItem.overview, vote_count: Int(movieItem.vote_count), release_date: movieItem.release_date, vote_average: movieItem.vote_average, name: movieItem.name)
-        
-        cell.configure(with: title)
+        cell.delegate = self
+        cell.configure(with: title, hideDelete: true)
         return cell
     }
     
@@ -92,19 +91,17 @@ extension DownloadViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
-            DataPersistenceManager.shared.deleteMovieOnDatabase(model: downloadedMovies[indexPath.row]) { [weak self] result in
-                switch result {
-                case .success():
-                    print("deleted form Database")
-                    self?.downloadedMovies.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                case .failure(let failure):
-                    print(failure.localizedDescription)
-                }
-            }
-            
+            deleteMovie(model: downloadedMovies[indexPath.row])
         default:
             break;
+        }
+    }
+}
+
+extension DownloadViewController: DownloadViewControllerDelegate {
+    func deleteMovie(movie: Media) {
+        if let index = downloadedMovies.firstIndex(where: { $0.id == movie.id} ) {
+            deleteMovie(model: downloadedMovies[index])
         }
     }
 }

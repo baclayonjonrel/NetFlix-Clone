@@ -17,16 +17,12 @@ enum Section: Int {
 
 class HomeViewController: UIViewController {
     
+    var viewModel = MovieViewModel()
     var randomTrendingMovie: Media? = nil
     private var headerView = HeroHeaderUIView()
     private var hasErrorOccurred: Bool = false
     
     let sectionTitles: [String] = ["Trending Movies", "Trending Tv", "Popular", "Upcoming Movies", "Top Rated"]
-    var trendingMovie: [Media] = []
-    var upcomingMovie: [Media] = []
-    var popularMovie: [Media] = []
-    var trendingTvs: [Media] = []
-    var topRatedMovies: [Media] = []
     
     private let homeFeedTable: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
@@ -36,18 +32,22 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .systemBackground
         view.addSubview(homeFeedTable)
-        
         homeFeedTable.delegate = self
         homeFeedTable.dataSource = self
-        
         configureNavBar()
-        
         headerView = HeroHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 600))
         homeFeedTable.tableHeaderView = headerView
-        configureHeroHeader()
+        
+        viewModel.onMoviesUpdate = { [weak self] in
+            self?.homeFeedTable.reloadData()
+            self?.configureHeroHeader()
+        }
+        viewModel.onError = { [weak self] error in
+            self?.handleError(error)
+        }
+        viewModel.fetchAllMovies()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -56,17 +56,9 @@ class HomeViewController: UIViewController {
     }
     
     func configureHeroHeader() {
-        APICaller.shared.getPopularMovies { [weak self] result in
-            switch result {
-            case .success(let movies):
-                guard let selectedRandom = movies.randomElement() else {return}
-                
-                self?.randomTrendingMovie = selectedRandom
-                
-                self?.headerView.configure(with: selectedRandom)
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
+        if let selectedRandom = viewModel.popularMovies.randomElement() {
+            self.randomTrendingMovie = selectedRandom
+            self.headerView.configure(with: selectedRandom)
         }
     }
     
@@ -112,59 +104,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.identifier, for: indexPath) as? CollectionViewTableViewCell else {
             return UITableViewCell()
         }
-        
         cell.delegate = self
-        
         if hasErrorOccurred {
             return cell
         }
-        
         switch indexPath.section {
         case Section.TrendingMovies.rawValue:
-            APICaller.shared.getTrendingMovies { results in
-                switch results {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    self.handleError(error)
-                }
-            }
+            cell.configure(with: viewModel.trendingMovies)
         case Section.TrendingTV.rawValue:
-            APICaller.shared.getTrendingTvs { results in
-                switch results {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    self.handleError(error)
-                }
-            }
+            cell.configure(with: viewModel.trendingTvs)
         case Section.Popular.rawValue:
-            APICaller.shared.getPopularMovies { results in
-                switch results {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    self.handleError(error)
-                }
-            }
+            cell.configure(with: viewModel.popularMovies)
         case Section.Upcoming.rawValue:
-            APICaller.shared.getTrendingUpcomingMovies { results in
-                switch results {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    self.handleError(error)
-                }
-            }
+            cell.configure(with: viewModel.upcomingMovies)
         case Section.TopRated.rawValue:
-            APICaller.shared.getTopRatedMovies { results in
-                switch results {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    self.handleError(error)
-                }
-            }
+            cell.configure(with: viewModel.topRatedMovies)
         default:
             return UITableViewCell()
         }
@@ -198,11 +152,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return sectionTitles[section]
     }
     
-    private func handleError(_ error: Error) {
+    private func handleError(_ error: String) {
         guard !hasErrorOccurred else { return }
         hasErrorOccurred = true
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+            let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
             self.tabBarController?.selectedIndex = 3

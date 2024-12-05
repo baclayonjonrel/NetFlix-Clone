@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class SearchViewController: UIViewController {
     
-    private var discoverMovies: [Media] = [Media]()
-
+    private var viewModel = SearchViewModel()
+    private var cancellables = Set<AnyCancellable>()
+    
     private let tableView: UITableView = {
         let table = UITableView()
         table.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.identifier)
@@ -30,29 +32,30 @@ class SearchViewController: UIViewController {
         title = "Search"
         navigationController?.navigationBar.prefersLargeTitles = false
         
-        fetchDiscoverMovies()
+        viewModel.fetchDiscoverMovies()
         
+        viewModel.$discoverMovies
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] movies in
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
+        setupTableView()
+        setupSearchController()
+    }
+    
+    private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        searchController.searchResultsUpdater = self
         view.addSubview(tableView)
+    }
+    
+    private func setupSearchController() {
+        searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         navigationItem.searchController?.isActive = true
         view.backgroundColor = .systemBackground
-    }
-    
-    private func fetchDiscoverMovies() {
-        APICaller.shared.getDiscoverMovies { [weak self] result in
-            switch result {
-            case .success(let movies):
-                self?.discoverMovies = movies
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,13 +65,6 @@ class SearchViewController: UIViewController {
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if #available(iOS 11.0, *) {
-            navigationItem.hidesSearchBarWhenScrolling = true
-        }
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
@@ -81,13 +77,13 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
             return UITableViewCell()
         }
-        let title = discoverMovies[indexPath.row]
-        cell.configure(with: title)
+        let title = viewModel.discoverMovies[indexPath.row]
+        cell.configure(with: title, hideDelete: false)
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return discoverMovies.count
+        return viewModel.discoverMovies.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -97,32 +93,28 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension SearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        let searchBar = searchController.searchBar
-        
-        guard let query = searchBar.text,
-              !query.trimmingCharacters(in: .whitespaces).isEmpty,
-              let resultsController = searchController.searchResultsController as? SearchResultsViewController else {
+        guard let query = searchController.searchBar.text,
+              !query.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
         }
-        resultsController.delegate = self
-        APICaller.shared.search(with: query) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let movies):
+        
+        viewModel.searchMovies(query: query)
+        
+        if let resultsController = searchController.searchResultsController as? SearchResultsViewController {
+            viewModel.$searchResults
+                .receive(on: DispatchQueue.main)
+                .sink { movies in
                     resultsController.searchedMovie = movies
                     resultsController.searchResultsCollectionView.reloadData()
-                case .failure(let error):
-                    print(error)
                 }
-            }
+                .store(in: &cancellables)
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let title = discoverMovies[indexPath.row]
-        
+        let title = viewModel.discoverMovies[indexPath.row]
         DispatchQueue.main.async {
             let vc = DetailViewController()
             vc.configure(with: title)

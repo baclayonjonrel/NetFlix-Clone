@@ -9,6 +9,7 @@ import UIKit
 
 class UpcomingViewController: UIViewController {
     
+    var viewModel = MovieViewModel()
     private var upcomingMovies: [Media] = [Media]()
     
     private let upcomingTable: UITableView = {
@@ -23,31 +24,27 @@ class UpcomingViewController: UIViewController {
         view.backgroundColor = .systemBackground
         title = "Coming soon"
         navigationController?.navigationBar.prefersLargeTitles = false
-        
-        fetchUpcoming()
-        
         view.addSubview(upcomingTable)
         upcomingTable.dataSource = self
         upcomingTable.delegate = self
+        
+        viewModel.onUpcomingMoviesUpdate = { [weak self] in
+            DispatchQueue.main.async {
+                self?.upcomingMovies = self?.viewModel.upcomingMovies ?? []
+                self?.upcomingTable.reloadData()
+            }
+        }
+        viewModel.onError = { [weak self] error in
+            let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self?.present(alert, animated: true, completion: nil)
+        }
+        viewModel.getOnlyUpcomingMovies()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         upcomingTable.frame = view.bounds
-    }
-    
-    private func fetchUpcoming() {
-        APICaller.shared.getTrendingUpcomingMovies { [weak self] result in
-            switch result {
-            case .success(let movies):
-                self?.upcomingMovies = movies
-                DispatchQueue.main.async {
-                    self?.upcomingTable.reloadData()
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
     }
 }
 
@@ -61,7 +58,7 @@ extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         let title = upcomingMovies[indexPath.row]
-        cell.configure(with: title)
+        cell.configure(with: title, hideDelete: false)
         return cell
     }
     
